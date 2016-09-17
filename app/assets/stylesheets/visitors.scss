@@ -1,0 +1,122 @@
+// Place all the styles related to the Visitors controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+body {
+  background-color: grey;
+  font-family: 'Titillium Web', sans-serif;
+}
+#gameWindow {
+  background-color: rgb(90, 180, 210);
+  width: 100%;
+  text-align: center;
+  /*text-align: center;*/
+}
+#hud {
+  display: block;
+}
+/* HUD */
+.timer, #tile-counter {
+  display: inline-block;
+  margin: 1px 0 1px 0;
+}
+.timer {
+  height: 58px;
+  width: 240px;
+  background-color: rgb(90, 180, 210);
+  font-size: 36px;
+  line-height: 58px;
+  color: rgb(230, 230, 230);
+}
+#tile-counter {
+  width: 118px;
+  font-size: 30px;
+}
+#toggle-flag-btn, #reset-btn {
+  display: inline-block;
+  width: 290px;
+  color: rgb(230, 230, 230);
+  background-color: rgb(90, 180, 210);
+  border: 1px solid rgb(230, 230, 230);
+  padding: 4px;
+}
+
+#toggle-flag-btn:hover,
+#reset-btn:hover {
+  background-color: rgb(90, 180, 210);
+  border: 1px solid rgb(240, 240, 240);
+  color: rgb(210, 210, 210);
+}
+
+#board {
+  display: inline-block;
+  width: 600px;
+  height: 100%;
+  background-color: rgb(230, 230, 230);
+  padding: 1px;
+  margin: 20px;
+}
+#tilesLeftCounter {
+  color: rgb(68, 125, 57);
+}
+#flagsLeftCounter{
+  color: rgb(186, 24, 24);
+}
+.row{
+  display: inline-block;
+  line-height: 58px;
+  font-size: 30px;
+  color: rgb(210, 210, 210);
+}
+.tile {
+  display: inline-block;
+  margin: 1px;
+
+  width: 58px;
+  height: 58px;
+
+  background-color: rgb(180, 180, 180);
+  text-align: center;
+
+}
+.tile:hover {
+  background-color: rgba(100, 100, 100, .9);
+}
+/*order is important, before tileHidden & other tile properties*/
+.tile-hidden {
+  color: transparent;
+}
+.tile-bomb {
+  color: transparent;
+  background-color: rgb(163, 0, 0);
+}
+.tile-0 {
+  background-color: rgb(260, 140, 60);
+}
+.tile-1 {
+  background-color: rgb(0, 150, 224);
+}
+.tile-2 {
+  background-color: rgb(20, 140, 204);
+}
+.tile-3 {
+  background-color: rgb(40, 130, 184);
+}
+.tile-4 {
+  background-color: rgb(60, 120, 164);
+}
+.tile-5 {
+  background-color: rgb(80, 110, 144);
+}
+.tile-6 {
+  background-color: rgb(100, 100, 124);
+}
+.tile-7 {
+  background-color: rgb(120, 90, 104);
+}
+.tile-8 {
+  background-color: rgb(140, 80, 84);
+}
+
+.flagged {
+  background-color: rgb(50, 50, 50);
+}

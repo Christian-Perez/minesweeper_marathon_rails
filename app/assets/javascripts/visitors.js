@@ -106,7 +106,7 @@ function timer(string){
   } // switch
 } // timer(string)
 
-function formatNum(num){
+function formatTime(num){
   if(num < 10){
     return ( '0' + num )
   }else{
@@ -116,9 +116,9 @@ function formatNum(num){
 
 function tick(){
   ++stopwatchSeconds
-
-    var minutes = formatNum( Math.floor(stopwatchSeconds / 60) )
-    var seconds = formatNum( stopwatchSeconds % 60 )
+    // console.log('tick')
+    var minutes = formatTime( Math.floor(stopwatchSeconds / 60) )
+    var seconds = formatTime( stopwatchSeconds % 60 )
     $('#current-timer').html(minutes + ':' + seconds)
   }
 
@@ -127,8 +127,8 @@ function setRecord(){
     console.log('highScoreSeconds > stopwatchSeconds')
     highScoreSeconds = stopwatchSeconds
   }
-  var minutes = formatNum( Math.floor(highScoreSeconds / 60) )
-  var seconds = formatNum( highScoreSeconds % 60 )
+  var minutes = formatTime( Math.floor(highScoreSeconds / 60) )
+  var seconds = formatTime( highScoreSeconds % 60 )
   $('#record-timer').html(minutes + ':' + seconds)
   console.log('setting Record ')
 }

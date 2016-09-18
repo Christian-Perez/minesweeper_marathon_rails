@@ -9,10 +9,10 @@ body {
   background-color: rgb(90, 180, 210);
   width: 100%;
   text-align: center;
-  /*text-align: center;*/
 }
 #hud {
   display: block;
+  overflow: scroll;
 }
 /* HUD */
 .timer, #tile-counter {
@@ -54,6 +54,7 @@ body {
   background-color: rgb(230, 230, 230);
   padding: 1px;
   margin: 20px;
+  // overflow: scroll;
 }
 #tilesLeftCounter {
   color: rgb(68, 125, 57);

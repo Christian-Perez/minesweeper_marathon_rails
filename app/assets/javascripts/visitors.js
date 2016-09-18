@@ -1,7 +1,7 @@
 var board = document.getElementById('board')
 var boardRows = 10;
 var boardColumns = 10;
-var numOfBombs = 1;
+var numOfBombs = 10;
 var numOfNonBombs = (boardRows * boardColumns) - numOfBombs
 var tilesLeftCounter // used by makeBoard() & clearZeroTiles()
 var stopwatchSeconds = 0;
@@ -102,6 +102,7 @@ function timer(string){
     case 'reset':
       stopwatchSeconds = 0;
       $('#current-timer').html(stopwatchSeconds)
+      clearInterval(stopwatch);
       break;
   } // switch
 } // timer(string)
@@ -116,7 +117,7 @@ function formatTime(num){
 
 function tick(){
   ++stopwatchSeconds
-  // console.log('tick - ' + stopwatchSeconds)
+  console.log('tick - ' + stopwatchSeconds)
     var minutes = formatTime( Math.floor(stopwatchSeconds / 60) )
     var seconds = formatTime( stopwatchSeconds % 60 )
     $('#current-timer').html(minutes + ':' + seconds)
@@ -138,6 +139,23 @@ $('#startGameButton').click(function(){
   makeBoard()
 })
 
+function makeIntoBomb(tileIdStr){
+  /// function concerns self with ONE bomb && recognizes & ignores adjacent bombs
+  //make tile at index tileIdStr into bomb
+  $('#' + tileIdStr).html('-1')
+  // define path to check tiles around bomb
+  var path = ['up', 'ur', 'right', 'dr', 'down', 'dl', 'left', 'ul']
+  // start of path = @bomb
+  var $targetTile = $('#' + tileIdStr)
+  for(var d = 0; d < path.length; d++){ // 'd' for direction
+    targetTileIdStr = traverseTiles(tileIdStr, path[d])
+    $targetTile = $('#' + targetTileIdStr)
+    if( !isBomb($targetTile) ){
+      $targetTile.html(parseInt($targetTile.html()) + 1)
+    }
+  } // for( pathThroughTargets )
+} // MAKE INTO BOMB ()
+
 function makeBoard(){
   // create elements above game board
   $('<div>', {class: 'timer', id: 'current-timer', text: '00:00'}).appendTo('#board')
@@ -154,8 +172,11 @@ function makeBoard(){
   //New Game Button
   $('#reset-btn').click(function(){
     $('#board').empty()
+    timer('stop')
+    timer('reset')
     makeBoard()
-    setRecord()
+    // setRecord()
+
   })
 
   // set values of counters
@@ -229,6 +250,7 @@ function makeBoard(){
     } // forEach( column )
   } // forEach( row )
 
+
   /// MAKE ARRAY OF UNIQUE BOMB IDs
   var newBombId = makeTileIdStr( randomTileAxisNum(), randomTileAxisNum() );
   var arrayOfBombs = [newBombId]
@@ -248,21 +270,4 @@ function makeBoard(){
   tilesToClear = numOfNonBombs
 
   timer('start')
-}
-
-function makeIntoBomb(tileIdStr){
-  /// function concerns self with ONE bomb && recognizes & ignores adjacent bombs
-  //make tile at index tileIdStr into bomb
-  $('#' + tileIdStr).html('-1')
-  // define path to check tiles around bomb
-  var path = ['up', 'ur', 'right', 'dr', 'down', 'dl', 'left', 'ul']
-  // start of path = @bomb
-  var $targetTile = $('#' + tileIdStr)
-  for(var d = 0; d < path.length; d++){ // 'd' for direction
-    targetTileIdStr = traverseTiles(tileIdStr, path[d])
-    $targetTile = $('#' + targetTileIdStr)
-    if( !isBomb($targetTile) ){
-      $targetTile.html(parseInt($targetTile.html()) + 1)
-    }
-  } // for( pathThroughTargets )
-} // MAKE INTO BOMB ()
+} // makeBoard()

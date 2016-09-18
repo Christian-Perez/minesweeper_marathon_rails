@@ -117,7 +117,7 @@ function formatTime(num){
 
 function tick(){
   ++stopwatchSeconds
-  console.log('tick - ' + stopwatchSeconds)
+  // console.log('tick - ' + stopwatchSeconds)
     var minutes = formatTime( Math.floor(stopwatchSeconds / 60) )
     var seconds = formatTime( stopwatchSeconds % 60 )
     $('#current-timer').html(minutes + ':' + seconds)

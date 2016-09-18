@@ -1,6 +1,6 @@
 var board = document.getElementById('board')
-var boardRows = 10;
-var boardColumns = 10;
+var boardRows = 17;
+var boardColumns = 8;
 var numOfBombs = 10;
 var numOfNonBombs = (boardRows * boardColumns) - numOfBombs
 var tilesLeftCounter // used by makeBoard() & clearZeroTiles()

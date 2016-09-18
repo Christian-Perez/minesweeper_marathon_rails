@@ -8,10 +8,17 @@ var stopwatchSeconds = 0;
 var highScoreSeconds = 0;
 var stopwatch;
 
-function randomTileAxisNum(){
-  // * has to adapt to different board sizes
-  var num = Math.floor( (Math.random() * 10 ) )
+function randomTileAxisNum(axis){
+  // axis = 'col' or 'row'
+  var num
+  axis == 'col' ? num = Math.floor( (Math.random() *boardColumns ) ) : num = Math.floor( (Math.random() *boardRows ) )
   return num
+
+
+  // var num = Math.floor( (Math.random() * 10 ) )
+  // return num
+
+
 }//randomNum()
 
 function makeTileIdStr(row, col){ // max board size 100x
@@ -252,10 +259,10 @@ function makeBoard(){
 
 
   /// MAKE ARRAY OF UNIQUE BOMB IDs
-  var newBombId = makeTileIdStr( randomTileAxisNum(), randomTileAxisNum() );
+  var newBombId = makeTileIdStr( randomTileAxisNum('col'), randomTileAxisNum('row') );
   var arrayOfBombs = [newBombId]
   while(arrayOfBombs.length < numOfBombs){
-    newBombId = makeTileIdStr( randomTileAxisNum(), randomTileAxisNum() );
+    newBombId = makeTileIdStr( randomTileAxisNum('col'), randomTileAxisNum('row') );
     // console.log('newBombId: ' + newBombId)
     if( !arrayOfBombs.includes(newBombId) ){
       arrayOfBombs.push(newBombId)

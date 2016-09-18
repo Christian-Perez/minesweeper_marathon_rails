@@ -84,7 +84,8 @@ body {
 }
 /*order is important, before tileHidden & other tile properties*/
 .tile-hidden {
-  color: transparent;
+  // color: transparent;
+  color: #000000;
 }
 .tile-bomb {
   color: transparent;

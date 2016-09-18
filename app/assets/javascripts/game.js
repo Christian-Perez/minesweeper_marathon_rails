@@ -1,7 +1,7 @@
 var board = document.getElementById('board')
-var boardRows = 5;
-var boardColumns = 5;
-var numOfBombs = 10;
+var boardRows = 3;
+var boardColumns = 3;
+var numOfBombs = 1;
 var numOfNonBombs = (boardRows * boardColumns) - numOfBombs
 var tilesLeftCounter // used by makeBoard() & clearZeroTiles()
 var stopwatchSeconds = 0;
@@ -124,7 +124,6 @@ function formatTime(num){
 
 function tick(){
   ++stopwatchSeconds
-  // console.log('tick - ' + stopwatchSeconds)
     var minutes = formatTime( Math.floor(stopwatchSeconds / 60) )
     var seconds = formatTime( stopwatchSeconds % 60 )
     $('#current-timer').html(minutes + ':' + seconds)
@@ -163,6 +162,28 @@ function makeIntoBomb(tileIdStr){
   } // for( pathThroughTargets )
 } // MAKE INTO BOMB ()
 
+function checkForWin(){
+  if(tilesLeftCounter < 1){
+    alert('you won! yay!!')
+    $(this).css('background-color', 'green')
+    timer('stop')
+    boardColumns++
+    boardRows++
+    numOfBombs += 2
+    numOfNonBombs = (boardRows * boardColumns) - numOfBombs
+//TODO disable clicking aditional tiles && make a newGame Btn into Continue Btn >> start timer again at new board
+    resetBoard()
+  }
+} // checkForWin()
+
+function resetBoard(){
+  $('#board').empty()
+  timer('stop')
+  timer('reset')
+  makeBoard()
+  // setRecord()
+}
+
 function makeBoard(){
   // create elements above game board
   $('<div>', {class: 'timer', id: 'current-timer', text: '00:00'}).appendTo('#board')
@@ -178,12 +199,7 @@ function makeBoard(){
 
   //New Game Button
   $('#reset-btn').click(function(){
-    $('#board').empty()
-    timer('stop')
-    timer('reset')
-    makeBoard()
-    // setRecord()
-
+    resetBoard()
   })
 
   // set values of counters
@@ -228,29 +244,27 @@ function makeBoard(){
               $(this).removeClass('tile-hidden')
               timer('stop')
 
-              if(stopwatchSeconds > highScoreSeconds){setRecord()} // TODO << this isn't working right b/c timer should count down, not up
+              if(stopwatchSeconds > highScoreSeconds){setRecord()}
+// TODO << this isn't working right b/c timer should count down, not up
               alert( 'tile ' + $(this).attr('id') + ' is a bomb, you lose')
               stopwatchSeconds = 0
 
             } else if($(this).hasClass('clicked') ){
               alert('This tile has already been selected, select another.')
+// TODO animate shake on click
 
             } else if( $(this).html() == '0' ){
               clearZeroTiles( $(this).attr('id') )
+              checkForWin()
 
             } else { // is num between 1 & 8
               console.log($(this).attr('id'))
               triggerTileById( $(this).attr('id') )
-
-              if(tilesLeftCounter < 1){
-                alert('you won! yay!!')
-                timer('stop')
-                //TODO say you won in a more elegant way than with an alert
-              }
+              checkForWin()
             } // else
           } else {// if( !flagToggle ).. the tile IS flagged
             alert('this tile is protected, toggle the flag selector and select this tile to disable protection')
-            // TODO create flashing red animation on clicked tile
+// TODO animate flashing red on click
           }
         }) // $divTile.click
         $divTile.appendTo('#row' + row);
@@ -263,13 +277,10 @@ function makeBoard(){
   var arrayOfBombs = [newBombId]
   while(arrayOfBombs.length < numOfBombs){
     newBombId = makeTileIdStr( randomTileAxisNum('col'), randomTileAxisNum('row') );
-    // console.log('newBombId: ' + newBombId)
     if( !arrayOfBombs.includes(newBombId) ){
       arrayOfBombs.push(newBombId)
-      // console.log('pushed ' + newBombId)
     }
   } // while(arrayOfBombs.length < numOfBombs)
-  console.log(arrayOfBombs)
   /// MAKE BOMBS
   for(var b = 0; b < arrayOfBombs.length; b++){
     makeIntoBomb(arrayOfBombs[b])

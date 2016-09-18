@@ -1,6 +1,6 @@
 var board = document.getElementById('board')
-var boardRows = 17;
-var boardColumns = 8;
+var boardRows = 5;
+var boardColumns = 5;
 var numOfBombs = 10;
 var numOfNonBombs = (boardRows * boardColumns) - numOfBombs
 var tilesLeftCounter // used by makeBoard() & clearZeroTiles()
@@ -262,7 +262,7 @@ function makeBoard(){
       // console.log('pushed ' + newBombId)
     }
   } // while(arrayOfBombs.length < numOfBombs)
-
+  console.log(arrayOfBombs)
   /// MAKE BOMBS
   for(var b = 0; b < arrayOfBombs.length; b++){
     makeIntoBomb(arrayOfBombs[b])

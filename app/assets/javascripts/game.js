@@ -5,17 +5,17 @@ var board = document.getElementById('board'),
     startColumns = 3,
     startStopwatchSeconds = 1000,
     startStopwatchLevelUp = 10,
-
+    startPlayerScore = 0,
+    // game vars
     stopwatchSeconds = startStopwatchSeconds,
     stopwatchLevelUp = 10,  // adds time to stopwatchSeconds
     stopwatchIncrement = 10, // increases stopwatchLevelUp
-
+    playerScore = startPlayerScore,
     numOfBombs = 1,
     bombIncrement = 2,
     numOfNonBombs = (boardRows * boardColumns) - numOfBombs,
     tilesLeftCounter, // used by setBoard() & clearZeroTiles()
 
-    highScoreSeconds = 60,
     stopwatch,
     flagsLeftCounter = numOfBombs,
     flagToggle = false
@@ -82,6 +82,9 @@ function triggerTileById(tileIdStr){
   $('#' + tileIdStr).addClass('tile-' + parseInt($('#' + tileIdStr).html()) )
   --tilesLeftCounter
   $('#tilesLeftCounter').text(tilesLeftCounter)
+
+  playerScore += parseInt( $('#' + tileIdStr).html() )
+  updateScore()
   }
 } // triggerTileById
 
@@ -139,18 +142,6 @@ function tick(){
   checkForWin()
 }
 
-function setRecord(){
-  if (stopwatchSeconds <
-    highScoreSeconds){
-    highScoreSeconds = stopwatchSeconds
-    console.log('setting high score to ' + highScoreSeconds)
-  }
-  var minutes = formatTime( Math.floor(highScoreSeconds / 60) )
-  var seconds = formatTime( highScoreSeconds % 60 )
-  $('#record-timer').html(minutes + ':' + seconds)
-  console.log('setting Record ')
-}
-
 function makeIntoBomb(tileIdStr){
   /// function concerns self with ONE bomb && recognizes & ignores adjacent bombs
   //make tile at index tileIdStr into bomb
@@ -167,6 +158,10 @@ function makeIntoBomb(tileIdStr){
     }
   } // for( pathThroughTargets )
 } // MAKE INTO BOMB ()
+
+function updateScore(){
+  $('#player-score').html(playerScore + 'pts')
+}
 
 function checkForWin(){
   if(tilesLeftCounter < 1){
@@ -214,7 +209,7 @@ function setHUD(){
   $('<div>', {id: 'tile-counter',
     html: '<span id="tilesLeftCounter">' + numOfNonBombs + '</span><span> / </span><span id="flagsLeftCounter">' + numOfBombs + '</span>'
   }).appendTo('#hud-display')
-  $('<div>', {class: 'timer', id: 'record-timer', text: '00:60'}).appendTo('#hud-display')
+  $('<div>', {class: 'timer', id: 'player-score', text: playerScore + 'pts'}).appendTo('#hud-display')
   $('<div>', {id: 'reset-btn', text: 'New Game'}).appendTo('#hud-buttons')
   $('<div>', {id: 'toggle-flag-btn', text: 'Toggle Flag'}).appendTo('#hud-buttons')
 
@@ -273,9 +268,8 @@ function setBoard(){
               $(this).addClass('tile-bomb')
               $(this).removeClass('tile-hidden')
               timer('stop')
-
-              if(stopwatchSeconds < highScoreSeconds){setRecord()}
               alert( 'tile ' + $(this).attr('id') + ' is a bomb, you lose')
+              //TODO style board
               stopwatchSeconds = 0
 
             } else if($(this).hasClass('clicked') ){
@@ -299,7 +293,7 @@ function setBoard(){
         $divTile.appendTo('#row' + row);
     } // forEach( column )
   } // forEach( row )
-  $('.row').css('width', (60 * boardColumns) ) 
+  $('.row').css('width', (60 * boardColumns) )
 
   /// MAKE ARRAY OF UNIQUE BOMB IDs
   var newBombId = makeTileIdStr( randomTileAxisNum('col'), randomTileAxisNum('row') );

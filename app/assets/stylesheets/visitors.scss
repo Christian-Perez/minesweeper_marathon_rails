@@ -107,7 +107,8 @@ body {
   color: rgb(186, 24, 24);
 }
 .row{
-  display: inline-block;
+  // display: inline-block;
+  display: block;
   line-height: $tile-dimension;
   font-size: 30px;
   color: $color1;

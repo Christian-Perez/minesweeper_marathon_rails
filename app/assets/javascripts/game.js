@@ -1,7 +1,10 @@
 var board = document.getElementById('board'),
     startRows = 3,
     startColumns = 3,
-    startStopwatchSeconds = 10,
+    startStopwatchSeconds = 1000,
+    startStopwatchLevelUp = 10,
+
+    stopwatchLevelUp = 10,
     boardRows = 3,
     boardColumns = 3,
     numOfBombs = 1,
@@ -32,6 +35,7 @@ function makeTileIdStr(row, col){ // max board size 100x
 
 function traverseTiles(tileIdStr, directionStr){
   // define path directions
+  setTimeout(function(){}, 3000)
   var shift = {
     up: [-1, 0],
     down: [1, 0],
@@ -140,11 +144,6 @@ function setRecord(){
   console.log('setting Record ')
 }
 
-$('#startGameButton').click(function(){
-  $('#board').empty()
-  makeBoard()
-})
-
 function makeIntoBomb(tileIdStr){
   /// function concerns self with ONE bomb && recognizes & ignores adjacent bombs
   //make tile at index tileIdStr into bomb
@@ -167,12 +166,13 @@ function checkForWin(){
     alert('you won! yay!!')
     $(this).css('background-color', 'green')
     // timer('stop')
-    stopwatchSeconds += 10
     boardColumns++
     boardRows++
     numOfBombs += 3
     numOfNonBombs = (boardRows * boardColumns) - numOfBombs
-//TODO disable clicking aditional tiles && make a newGame Btn into Continue Btn >> start timer again at new board
+    stopwatchSeconds += stopwatchLevelUp
+    stopwatchLevelUp += 10
+    //TODO disable clicking aditional tiles && make a newGame Btn into Continue Btn >> start timer again at new board
     resetBoard()
   }
   if(stopwatchSeconds < 0){
@@ -226,6 +226,7 @@ function makeBoard(){
     if( $('#toggle-flag-btn').hasClass( 'flagged' ) ){
       $('#toggle-flag-btn').removeClass('flagged')
       $('#toggle-flag-btn').css('background-color', 'rgb(90, 180, 210)')
+      //TODO create a class for toggle-flag-btn >> styles should be in css
     } else {
       $('#toggle-flag-btn').addClass('flagged')
       $('#toggle-flag-btn').css('background-color', 'rgb(50, 50, 50)')
@@ -236,9 +237,9 @@ function makeBoard(){
     $('<div>', { id: ('row' + row), class: 'row' }).appendTo('#board');
     for(var col = 0; col < boardColumns; col++){ // COLUMN
       var $divTile = $('<div>', { class: 'tile tile-hidden', id: makeTileIdStr(row, col), text: 0 } );
-  /// FOR EVERY TILE ON THE BOARD...
+        /// FOR EVERY TILE ON THE BOARD...
         $divTile.click(function(){
-          /// is flag-toggle active?
+          /// toggle Flags
           if(flagToggle){
             if( $(this).hasClass('flagged') ){
               $(this).removeClass('flagged')
@@ -256,27 +257,26 @@ function makeBoard(){
               $(this).removeClass('tile-hidden')
               timer('stop')
 
-              if(stopwatchSeconds > highScoreSeconds){setRecord()}
-// TODO << this isn't working right b/c timer should count down, not up
+              if(stopwatchSeconds < highScoreSeconds){setRecord()}
               alert( 'tile ' + $(this).attr('id') + ' is a bomb, you lose')
               stopwatchSeconds = 0
 
             } else if($(this).hasClass('clicked') ){
               alert('This tile has already been selected, select another.')
-// TODO animate shake on click
+              // TODO animate shake on click
 
             } else if( $(this).html() == '0' ){
               clearZeroTiles( $(this).attr('id') )
               checkForWin()
 
             } else { // is num between 1 & 8
-              console.log($(this).attr('id'))
+              // console.log($(this).attr('id'))
               triggerTileById( $(this).attr('id') )
               checkForWin()
             } // else
           } else {// if( !flagToggle ).. the tile IS flagged
             alert('this tile is protected, toggle the flag selector and select this tile to disable protection')
-// TODO animate flashing red on click
+            // TODO animate flashing red on click
           }
         }) // $divTile.click
         $divTile.appendTo('#row' + row);
@@ -301,3 +301,5 @@ function makeBoard(){
 
   timer('start')
 } // makeBoard()
+
+$('#startGameButton').click( function(){ resetBoard() } )

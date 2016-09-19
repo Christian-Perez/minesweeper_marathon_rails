@@ -1,57 +1,73 @@
 // Place all the styles related to the Visitors controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+$color1: rgb(260, 260, 300);
+$color1-hover: rgb(240, 240, 240);
+$color2: rgb(90, 180, 210);
+$color2-hover: rgb(80, 170, 200);
+$shadow: rgba(120,120,120,0.5);
+
+$hud-height: 58px;
+
+
 body {
-  background-color: rgb(210, 210, 210);
-  // background-image: url('http://image.shutterstock.com/display_pic_with_logo/3106268/396924547/stock-vector-abstract-halftone-background-pixelated-effect-geometric-background-with-squares-vector-396924547.jpg');
-  background-size: cover;
+  background-color: $color2;
+  background: $color1;
+  background: -webkit-linear-gradient($color1, $color2);
+  background: -o-linear-gradient($color1, $color2);
+  background: -moz-linear-gradient($color1, $color2);
+  background: linear-gradient($color1, $color2);
   font-family: 'Titillium Web', sans-serif;
+
+  height: 98vh;
 }
 #gameWindow {
-  // background-color: rgb(90, 180, 210);
-  background-color: rgba(140, 140, 140, .8);
+  background-color: rgba(160, 160, 160, .6);
   width: 100%;
-  // height: 100%;
-  height: 600px;
   text-align: center;
+
+  -webkit-box-shadow: 2px 2px 8px 2px $shadow;
+  -moz-box-shadow: 2px 2px 8px 2px $shadow;
+  box-shadow: 2px 2px 8px 2px $shadow;
 }
-#hud {
-  display: block;
-  overflow: scroll;
-}
+// #hud {
+//   display: block;
+//   overflow: scroll;
+// }
 /* HUD */
 .timer, #tile-counter {
   display: inline-block;
   margin: 1px 0 1px 0;
+  height: 58px;
 }
 .timer {
-  height: 58px;
   width: 240px;
-  background-color: rgb(90, 180, 210);
+  background-color: $color2;
   font-size: 36px;
   line-height: 58px;
-  color: rgb(230, 230, 230);
+  color: $color1;
 }
 #tile-counter {
+  display: inline-block;
   width: 118px;
   font-size: 30px;
+  background-color: $color1;
 }
-#toggle-flag-btn, #reset-btn {
+#toggle-flag-btn,
+#reset-btn {
   display: inline-block;
   width: 290px;
-  color: rgb(230, 230, 230);
-  background-color: rgb(90, 180, 210);
-  border: 1px solid rgb(230, 230, 230);
+  color: $color1;
+  background-color: $color2;
+  border: 1px solid $color1;
   padding: 4px;
 }
-
 #toggle-flag-btn:hover,
 #reset-btn:hover {
-  background-color: rgb(90, 180, 210);
-  border: 1px solid rgb(240, 240, 240);
-  color: rgb(210, 210, 210);
+  background-color: $color2-hover;
+  border: 1px solid $color1-hover;
+  color: $color1-hover;
 }
-
 #board {
   display: inline-block;
   min-width: 600px;
@@ -84,7 +100,6 @@ body {
 
   background-color: rgb(210, 210, 210);
   text-align: center;
-
 }
 .tile:hover {
   background-color: rgba(100, 100, 100, .9);

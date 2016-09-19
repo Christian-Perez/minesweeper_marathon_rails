@@ -177,7 +177,7 @@ body {
 }
 
 @media screen and (min-width: 256px) {
-  $tile-dimension: 80px;
+  $tile-dimension: 10vw;
   .tile{
     // background-color: green;
   }

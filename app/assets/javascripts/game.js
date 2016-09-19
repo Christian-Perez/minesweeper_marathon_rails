@@ -1,22 +1,26 @@
 var board = document.getElementById('board'),
+    boardRows = 13,
+    boardColumns = 13,
     startRows = 3,
     startColumns = 3,
     startStopwatchSeconds = 1000,
     startStopwatchLevelUp = 10,
 
-    stopwatchLevelUp = 10,
-    stopwatchIncrement = 10,
-    boardRows = 3,
-    boardColumns = 3,
+    stopwatchSeconds = startStopwatchSeconds,
+    stopwatchLevelUp = 10,  // adds time to stopwatchSeconds
+    stopwatchIncrement = 10, // increases stopwatchLevelUp
+
     numOfBombs = 1,
     bombIncrement = 2,
     numOfNonBombs = (boardRows * boardColumns) - numOfBombs,
     tilesLeftCounter, // used by setBoard() & clearZeroTiles()
-    stopwatchSeconds = startStopwatchSeconds,
+
     highScoreSeconds = 60,
     stopwatch,
     flagsLeftCounter = numOfBombs,
     flagToggle = false
+
+$('#startGameButton').click( function(){ resetGame() } )
 
 function randomTileAxisNum(axis){
   // axis = 'col' or 'row'
@@ -202,16 +206,20 @@ function resetGame(){
 
 function setHUD(){
   // create elements above game board
-  $('<div>', {class: 'timer', id: 'current-timer', text: formatTime(stopwatchSeconds) }).appendTo('#board')
+  $( '<div>', {id: 'hud'} ).appendTo('#board')
+  $( '<div>', {id: 'hud-display'}).appendTo('#hud')
+  $( '<div>', {id: 'hud-buttons'}).appendTo('#hud')
+
+  $('<div>', {class: 'timer', id: 'current-timer', text: formatTime(stopwatchSeconds) }).appendTo('#hud-display')
   $('<div>', {id: 'tile-counter',
     html: '<span id="tilesLeftCounter">' + numOfNonBombs + '</span><span> / </span><span id="flagsLeftCounter">' + numOfBombs + '</span>'
-  }).appendTo('#board')
-  $('<div>', {class: 'timer', id: 'record-timer', text: '00:60'}).appendTo('#board')
-  $('<div>', {id: 'reset-btn', text: 'New Game'}).appendTo('#board')
-  $('<div>', {id: 'toggle-flag-btn', text: 'Toggle Flag'}).appendTo('#board')
+  }).appendTo('#hud-display')
+  $('<div>', {class: 'timer', id: 'record-timer', text: '00:60'}).appendTo('#hud-display')
+  $('<div>', {id: 'reset-btn', text: 'New Game'}).appendTo('#hud-buttons')
+  $('<div>', {id: 'toggle-flag-btn', text: 'Toggle Flag'}).appendTo('#hud-buttons')
 
   // customize board width to number of columns
-  $('#board').css('width', (boardColumns * 60).toString() )
+  // $('#hud').css('width', (boardColumns * 60).toString() )
 
   //New Game Button
   $('#reset-btn').click(function(){
@@ -239,8 +247,11 @@ function setHUD(){
 }
 
 function setBoard(){
+  // scrollDiv
+  $('<div>', { id: 'scrollDiv' }).appendTo('#board');
+
   for(var row = 0; row < boardRows; row++){ // ROW
-    $('<div>', { id: ('row' + row), class: 'row' }).appendTo('#board');
+    $('<div>', { id: ('row' + row), class: 'row' }).appendTo('#scrollDiv');
     for(var col = 0; col < boardColumns; col++){ // COLUMN
       var $divTile = $('<div>', { class: 'tile tile-hidden', id: makeTileIdStr(row, col), text: 0 } );
         /// FOR EVERY TILE ON THE BOARD...
@@ -288,7 +299,7 @@ function setBoard(){
         $divTile.appendTo('#row' + row);
     } // forEach( column )
   } // forEach( row )
-
+  $('.row').css('width', (60 * boardColumns) ) 
 
   /// MAKE ARRAY OF UNIQUE BOMB IDs
   var newBombId = makeTileIdStr( randomTileAxisNum('col'), randomTileAxisNum('row') );
@@ -307,5 +318,3 @@ function setBoard(){
 
   timer('start')
 } // setBoard()
-
-$('#startGameButton').click( function(){ resetGame() } )

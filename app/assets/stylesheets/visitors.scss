@@ -3,11 +3,13 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 $color1: rgb(260, 260, 300);
 $color1-hover: rgb(240, 240, 240);
-$color2: rgb(90, 180, 210);
-$color2-hover: rgb(80, 170, 200);
+$color2: rgba(30, 120, 140, .7);
+$color2-hover: rgba(30, 120, 140, .8);
 $shadow: rgba(120,120,120,0.5);
+$shadow-light: rgba(150, 150, 150, 0.3);
 
 $hud-height: 58px;
+$tile-dimension: 58px;
 
 
 body {
@@ -22,33 +24,54 @@ body {
   height: 98vh;
 }
 #gameWindow {
-  background-color: rgba(160, 160, 160, .6);
   width: 100%;
+
+  background-color: rgba(220, 220, 220, .4);
+  border: 1px solid #fff;
+
   text-align: center;
 
   -webkit-box-shadow: 2px 2px 8px 2px $shadow;
   -moz-box-shadow: 2px 2px 8px 2px $shadow;
   box-shadow: 2px 2px 8px 2px $shadow;
 }
-// #hud {
-//   display: block;
-//   overflow: scroll;
-// }
-/* HUD */
+// accent shadows
+.tile, #toggle-flag-btn, #reset-btn, #tile-counter{
+  -webkit-box-shadow: 2px 2px 8px 2px $shadow-light;
+  -moz-box-shadow: 2px 2px 8px 2px $shadow-light;
+  box-shadow: 2px 2px 8px 2px $shadow-light;
+}
+#scrollDiv{
+    overflow: scroll;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    max-height: 78vh;
+    max-width: 90vw;
+}
+#hud {
+  display: block;
+  overflow: scroll;
+  margin-bottom: 10px;
+  #hud-Display{
+
+  }
+  #hud-buttons{
+
+  }
+}
 .timer, #tile-counter {
   display: inline-block;
   margin: 1px 0 1px 0;
-  height: 58px;
+  height: $tile-dimension;
 }
 .timer {
   width: 240px;
   background-color: $color2;
   font-size: 36px;
-  line-height: 58px;
+  line-height: $tile-dimension;
   color: $color1;
 }
 #tile-counter {
-  display: inline-block;
   width: 118px;
   font-size: 30px;
   background-color: $color1;
@@ -76,7 +99,6 @@ body {
   background-color: transparent;
   padding: 1px;
   margin: 20px;
-  // overflow: scroll;
 }
 #tilesLeftCounter {
   color: rgb(68, 125, 57);
@@ -86,35 +108,43 @@ body {
 }
 .row{
   display: inline-block;
-  width: 100%;
-  line-height: 58px;
+  line-height: $tile-dimension;
   font-size: 30px;
-  color: rgb(210, 210, 210);
+  color: $color1;
 }
 .tile {
   display: inline-block;
   margin: 1px;
 
-  width: 58px;
-  height: 58px;
+  width: $tile-dimension;
+  height: $tile-dimension;
 
-  background-color: rgb(210, 210, 210);
+  // border: 1px solid #fff;
+
+  background-color: $color1;
   text-align: center;
+
+  &#startGameButton{
+    color: #000000;
+    vertical-align: center;
+    line-height: $tile-dimension;
+    font-size: 30px;
+  }
 }
 .tile:hover {
-  background-color: rgba(100, 100, 100, .9);
+  background-color: $color1-hover;
 }
 /*order is important, before tileHidden & other tile properties*/
 .tile-hidden {
-  // color: transparent;
-  color: #000000;
+  color: transparent;
+  // color: #000000;
 }
 .tile-bomb {
   color: transparent;
   background-color: rgb(163, 0, 0);
 }
 .tile-0 {
-  background-color: rgb(260, 140, 60);
+  background-color: rgb(60, 170, 80);
 }
 .tile-1 {
   background-color: rgb(0, 150, 224);

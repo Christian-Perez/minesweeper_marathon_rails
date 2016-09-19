@@ -9,8 +9,8 @@ var board = document.getElementById('board'),
     boardColumns = 3,
     numOfBombs = 1,
     numOfNonBombs = (boardRows * boardColumns) - numOfBombs,
-    tilesLeftCounter, // used by makeBoard() & clearZeroTiles()
-    stopwatchSeconds = 10,
+    tilesLeftCounter, // used by setBoard() & clearZeroTiles()
+    stopwatchSeconds = startStopwatchSeconds,
     highScoreSeconds = 60,
     stopwatch,
     flagsLeftCounter = numOfBombs,
@@ -110,7 +110,7 @@ function timer(string){
       clearInterval(stopwatch);
       break;
     case 'reset':
-      stopwatchSeconds = stopwatchSeconds;
+      stopwatchSeconds = startStopwatchSeconds;
       $('#current-timer').html(stopwatchSeconds)
       clearInterval(stopwatch);
       break;
@@ -126,7 +126,6 @@ function formatTime(num){
 }
 
 function tick(){
-  console.log('tick: >> stopwatchSeconds: ', stopwatchSeconds)
   --stopwatchSeconds
     var minutes = formatTime( Math.floor(stopwatchSeconds / 60) )
     var seconds = formatTime( stopwatchSeconds % 60 )
@@ -175,7 +174,7 @@ function checkForWin(){
     stopwatchSeconds += stopwatchLevelUp
     stopwatchLevelUp += 10
     //TODO disable clicking aditional tiles && make a newGame Btn into Continue Btn >> start timer again at new board
-    resetBoard()
+    resetGame()
   }
   if(stopwatchSeconds < 0){
     gameOver()
@@ -187,21 +186,21 @@ function gameOver(){
   boardRows = startRows
   boardColumns = startColumns
   stopwatchSeconds = startStopwatchSeconds
-  resetBoard()
+  resetGame()
 }
 
-function resetBoard(){
+function resetGame(){
   $('#board').empty()
   timer('stop')
   timer('reset')
-  resetHUD()
-  makeBoard()
-  // setRecord()
+  setHUD()
+  // check high score
+  setBoard()
 }
 
-function resetHUD(){
+function setHUD(){
   // create elements above game board
-  $('<div>', {class: 'timer', id: 'current-timer', text: '00:' + formatTime(stopwatchSeconds) }).appendTo('#board')
+  $('<div>', {class: 'timer', id: 'current-timer', text: formatTime(stopwatchSeconds) }).appendTo('#board')
   $('<div>', {id: 'tile-counter',
     html: '<span id="tilesLeftCounter">' + numOfNonBombs + '</span><span> / </span><span id="flagsLeftCounter">' + numOfBombs + '</span>'
   }).appendTo('#board')
@@ -214,7 +213,7 @@ function resetHUD(){
 
   //New Game Button
   $('#reset-btn').click(function(){
-    resetBoard()
+    resetGame()
   })
 
   // set values of counters
@@ -237,9 +236,7 @@ function resetHUD(){
   }) // click( #toggle-flag-btn )
 }
 
-function makeBoard(){
-  // resetHUD()
-
+function setBoard(){
   for(var row = 0; row < boardRows; row++){ // ROW
     $('<div>', { id: ('row' + row), class: 'row' }).appendTo('#board');
     for(var col = 0; col < boardColumns; col++){ // COLUMN
@@ -307,6 +304,6 @@ function makeBoard(){
   tilesToClear = numOfNonBombs
 
   timer('start')
-} // makeBoard()
+} // setBoard()
 
-$('#startGameButton').click( function(){ resetBoard() } )
+$('#startGameButton').click( function(){ resetGame() } )

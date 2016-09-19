@@ -1,24 +1,21 @@
-var board = document.getElementById('board')
-var boardRows = 3;
-var boardColumns = 3;
-var numOfBombs = 1;
-var numOfNonBombs = (boardRows * boardColumns) - numOfBombs
-var tilesLeftCounter // used by makeBoard() & clearZeroTiles()
-var stopwatchSeconds = 0;
-var highScoreSeconds = 0;
-var stopwatch;
+var board = document.getElementById('board'),
+    startRows = 3,
+    startColumns = 3,
+    startStopwatchSeconds = 10,
+    boardRows = 3,
+    boardColumns = 3,
+    numOfBombs = 1,
+    numOfNonBombs = (boardRows * boardColumns) - numOfBombs,
+    tilesLeftCounter, // used by makeBoard() & clearZeroTiles()
+    stopwatchSeconds = 10,
+    highScoreSeconds = 60,
+    stopwatch
 
 function randomTileAxisNum(axis){
   // axis = 'col' or 'row'
   var num
   axis == 'col' ? num = Math.floor( (Math.random() *boardColumns ) ) : num = Math.floor( (Math.random() *boardRows ) )
   return num
-
-
-  // var num = Math.floor( (Math.random() * 10 ) )
-  // return num
-
-
 }//randomNum()
 
 function makeTileIdStr(row, col){ // max board size 100x
@@ -107,7 +104,7 @@ function timer(string){
       clearInterval(stopwatch);
       break;
     case 'reset':
-      stopwatchSeconds = 0;
+      stopwatchSeconds = stopwatchSeconds;
       $('#current-timer').html(stopwatchSeconds)
       clearInterval(stopwatch);
       break;
@@ -123,14 +120,17 @@ function formatTime(num){
 }
 
 function tick(){
-  ++stopwatchSeconds
+  console.log('tick: >> stopwatchSeconds: ', stopwatchSeconds)
+  --stopwatchSeconds
     var minutes = formatTime( Math.floor(stopwatchSeconds / 60) )
     var seconds = formatTime( stopwatchSeconds % 60 )
     $('#current-timer').html(minutes + ':' + seconds)
+    checkForWin()
   }
 
 function setRecord(){
-  if (stopwatchSeconds > highScoreSeconds){
+  if (stopwatchSeconds <
+    highScoreSeconds){
     highScoreSeconds = stopwatchSeconds
     console.log('setting high score to ' + highScoreSeconds)
   }
@@ -166,15 +166,27 @@ function checkForWin(){
   if(tilesLeftCounter < 1){
     alert('you won! yay!!')
     $(this).css('background-color', 'green')
-    timer('stop')
+    // timer('stop')
+    stopwatchSeconds += 10
     boardColumns++
     boardRows++
-    numOfBombs += 2
+    numOfBombs += 3
     numOfNonBombs = (boardRows * boardColumns) - numOfBombs
 //TODO disable clicking aditional tiles && make a newGame Btn into Continue Btn >> start timer again at new board
     resetBoard()
   }
+  if(stopwatchSeconds < 0){
+    gameOver()
+  }
 } // checkForWin()
+
+function gameOver(){
+  alert('GAME OVER')
+  boardRows = startRows
+  boardColumns = startColumns
+  stopwatchSeconds = startStopwatchSeconds
+  resetBoard()
+}
 
 function resetBoard(){
   $('#board').empty()
@@ -186,11 +198,11 @@ function resetBoard(){
 
 function makeBoard(){
   // create elements above game board
-  $('<div>', {class: 'timer', id: 'current-timer', text: '00:00'}).appendTo('#board')
+  $('<div>', {class: 'timer', id: 'current-timer', text: '00:' + stopwatchSeconds}).appendTo('#board')
   $('<div>', {id: 'tile-counter',
     html: '<span id="tilesLeftCounter">' + numOfNonBombs + '</span><span> / </span><span id="flagsLeftCounter">' + numOfBombs + '</span>'
   }).appendTo('#board')
-  $('<div>', {class: 'timer', id: 'record-timer', text: '00:00'}).appendTo('#board')
+  $('<div>', {class: 'timer', id: 'record-timer', text: '00:60'}).appendTo('#board')
   $('<div>', {id: 'reset-btn', text: 'New Game'}).appendTo('#board')
   $('<div>', {id: 'toggle-flag-btn', text: 'Toggle Flag'}).appendTo('#board')
 

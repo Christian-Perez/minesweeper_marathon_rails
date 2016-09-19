@@ -2,8 +2,8 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 body {
-  // background-color: grey;
-  background-image: url('http://image.shutterstock.com/display_pic_with_logo/3106268/396924547/stock-vector-abstract-halftone-background-pixelated-effect-geometric-background-with-squares-vector-396924547.jpg');
+  background-color: rgb(210, 210, 210);
+  // background-image: url('http://image.shutterstock.com/display_pic_with_logo/3106268/396924547/stock-vector-abstract-halftone-background-pixelated-effect-geometric-background-with-squares-vector-396924547.jpg');
   background-size: cover;
   font-family: 'Titillium Web', sans-serif;
 }
@@ -56,7 +56,7 @@ body {
   display: inline-block;
   min-width: 600px;
   height: 100%;
-  // background-color: rgb(230, 230, 230);
+  background-color: rgb(230, 230, 230);
   background-color: transparent;
   padding: 1px;
   margin: 20px;
@@ -82,7 +82,7 @@ body {
   width: 58px;
   height: 58px;
 
-  background-color: rgba(180, 180, 180, .9);
+  background-color: rgb(210, 210, 210);
   text-align: center;
 
 }

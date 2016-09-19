@@ -5,9 +5,11 @@ var board = document.getElementById('board'),
     startStopwatchLevelUp = 10,
 
     stopwatchLevelUp = 10,
+    stopwatchIncrement = 10,
     boardRows = 3,
     boardColumns = 3,
     numOfBombs = 1,
+    bombIncrement = 2,
     numOfNonBombs = (boardRows * boardColumns) - numOfBombs,
     tilesLeftCounter, // used by setBoard() & clearZeroTiles()
     stopwatchSeconds = startStopwatchSeconds,
@@ -127,11 +129,11 @@ function formatTime(num){
 
 function tick(){
   --stopwatchSeconds
-    var minutes = formatTime( Math.floor(stopwatchSeconds / 60) )
-    var seconds = formatTime( stopwatchSeconds % 60 )
-    $('#current-timer').html(minutes + ':' + seconds)
-    checkForWin()
-  }
+  var minutes = formatTime( Math.floor(stopwatchSeconds / 60) )
+  var seconds = formatTime( stopwatchSeconds % 60 )
+  $('#current-timer').html(minutes + ':' + seconds)
+  checkForWin()
+}
 
 function setRecord(){
   if (stopwatchSeconds <
@@ -169,10 +171,10 @@ function checkForWin(){
     // timer('stop')
     boardColumns++
     boardRows++
-    numOfBombs += 3
+    numOfBombs += bombIncrement
     numOfNonBombs = (boardRows * boardColumns) - numOfBombs
     stopwatchSeconds += stopwatchLevelUp
-    stopwatchLevelUp += 10
+    stopwatchLevelUp += stopwatchIncrement
     //TODO disable clicking aditional tiles && make a newGame Btn into Continue Btn >> start timer again at new board
     resetGame()
   }

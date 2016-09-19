@@ -175,3 +175,10 @@ body {
 .flagged {
   background-color: rgb(50, 50, 50);
 }
+
+@media screen and (min-width: 256px) {
+  $tile-dimension: 80px;
+  .tile{
+    // background-color: green;
+  }
+}

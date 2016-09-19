@@ -1,6 +1,6 @@
 var board = document.getElementById('board'),
-    boardRows = 13,
-    boardColumns = 13,
+    boardRows = 3,
+    boardColumns = 3,
     startRows = 3,
     startColumns = 3,
     startStopwatchSeconds = 1000,

@@ -12,7 +12,9 @@ var board = document.getElementById('board'),
     tilesLeftCounter, // used by makeBoard() & clearZeroTiles()
     stopwatchSeconds = 10,
     highScoreSeconds = 60,
-    stopwatch
+    stopwatch,
+    flagsLeftCounter = numOfBombs,
+    flagToggle = false
 
 function randomTileAxisNum(axis){
   // axis = 'col' or 'row'
@@ -192,13 +194,14 @@ function resetBoard(){
   $('#board').empty()
   timer('stop')
   timer('reset')
+  resetHUD()
   makeBoard()
   // setRecord()
 }
 
-function makeBoard(){
+function resetHUD(){
   // create elements above game board
-  $('<div>', {class: 'timer', id: 'current-timer', text: '00:' + stopwatchSeconds}).appendTo('#board')
+  $('<div>', {class: 'timer', id: 'current-timer', text: '00:' + formatTime(stopwatchSeconds) }).appendTo('#board')
   $('<div>', {id: 'tile-counter',
     html: '<span id="tilesLeftCounter">' + numOfNonBombs + '</span><span> / </span><span id="flagsLeftCounter">' + numOfBombs + '</span>'
   }).appendTo('#board')
@@ -216,8 +219,8 @@ function makeBoard(){
 
   // set values of counters
   tilesLeftCounter = numOfNonBombs;
-  var flagsLeftCounter = numOfBombs;
-  var flagToggle = false
+  flagsLeftCounter = numOfBombs;
+  flagToggle = false
 
   // toggle Flag Button
   $('#toggle-flag-btn').click(function(){
@@ -232,6 +235,10 @@ function makeBoard(){
       $('#toggle-flag-btn').css('background-color', 'rgb(50, 50, 50)')
     }
   }) // click( #toggle-flag-btn )
+}
+
+function makeBoard(){
+  // resetHUD()
 
   for(var row = 0; row < boardRows; row++){ // ROW
     $('<div>', { id: ('row' + row), class: 'row' }).appendTo('#board');

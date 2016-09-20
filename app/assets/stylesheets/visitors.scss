@@ -213,6 +213,11 @@ li, h3 {
   cursor:no-drop;
 }
 
+.disabled {
+  color: #000;
+  pointer-events: none;
+}
+
 // @media screen and (min-width: 256px) {
 //   $tile-dimension: 10vw;
 //   .tile{

@@ -189,8 +189,14 @@ function gameOver(message){
   boardRows = startRows
   boardColumns = startColumns
   stopwatchSeconds = startStopwatchSeconds
-  alert('GAME OVER \n' + message)
-  $('<div>', {class: 'continue-btn', html: 'start over'}).appendTo('#hud').click( function(){ levelUp() } )
+  // alert('GAME OVER \n' + message)
+  $('<div>', {id: 'notice', text: 'GAME OVER\n' + message}).appendTo('#hud')
+  revealTiles()
+  $('<div>', {class: 'continue-btn', html: 'start over'}).appendTo('#hud').click( function(){ resetGame() } )
+}
+function revealTiles(){
+  console.log('revealing tiles..')
+  $('.tile').addClass('disabled')
 }
 
 function resetGame(){

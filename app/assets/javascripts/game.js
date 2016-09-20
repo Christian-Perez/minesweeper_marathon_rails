@@ -176,6 +176,8 @@ function checkForWin(){
     stopwatchLevelUp += stopwatchIncrement
     //TODO disable clicking aditional tiles && make a newGame Btn into Continue Btn >> start timer again at new board
     // resetGame()
+    $('<div>', {id: 'notice', text: 'LEVEL COMPLETE!!!'}).appendTo('#hud')
+    revealTiles()
     $('<div>', {class: 'continue-btn', html: 'continue..'}).appendTo('#hud').click( function(){ levelUp() } )
     timer('stop')
     alert('you won! yay!!')

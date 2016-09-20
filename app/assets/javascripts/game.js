@@ -180,7 +180,6 @@ function checkForWin(){
     revealTiles()
     $('<div>', {class: 'continue-btn', html: 'continue..'}).appendTo('#hud').click( function(){ levelUp() } )
     timer('stop')
-    alert('you won! yay!!')
   }
   if(stopwatchSeconds < 0){
     gameOver('time ran out :(')
@@ -198,7 +197,11 @@ function gameOver(message){
 }
 function revealTiles(){
   console.log('revealing tiles..')
-  $('.tile').addClass('disabled')
+  $('.tile').addClass('disabled').each(function(){
+    if( $(this).html() == '-1' ){
+      $(this).addClass('tile-bomb')
+    }
+  })
 }
 
 function resetGame(){

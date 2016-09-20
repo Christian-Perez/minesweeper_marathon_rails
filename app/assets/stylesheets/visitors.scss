@@ -176,10 +176,6 @@ li, h3 {
   color: transparent;
   // color: #000;
 }
-.tile-bomb {
-  color: transparent;
-  background-color: rgb(163, 0, 0);
-}
 .tile-0 {
   background-color: rgb(119, 200, 186);
 }
@@ -212,15 +208,11 @@ li, h3 {
   background-color: $flagged;
   cursor:no-drop;
 }
-
 .disabled {
-  color: #000;
+  // color: #000;
   pointer-events: none;
 }
-
-// @media screen and (min-width: 256px) {
-//   $tile-dimension: 10vw;
-//   .tile{
-//     // background-color: green;
-//   }
-// }
+.tile-bomb {
+  color: transparent;
+  background-color: rgb(163, 0, 0);
+}

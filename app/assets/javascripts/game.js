@@ -121,7 +121,6 @@ function gameOver(message){ //
 }
 
 function revealTiles(){
-  console.log('revealing tiles..')
   $('.tile').addClass('disabled').each(function(){
     if( $(this).html() == '-1' ){
       $(this).addClass('tile-bomb')
@@ -130,7 +129,6 @@ function revealTiles(){
 } //
 
 function resetGame(){
-  console.log('resetGame')
   $('#board').empty()
   timer('stop')
   timer('reset')
@@ -223,7 +221,7 @@ function setBoard(){
                 stopwatchSeconds = 0
                 gameOver('you clicked a bomb :(')
               } else if($(this).hasClass('clicked') ){
-                alert('This tile has already been selected, select another.')
+                $(this).effect( 'shake', {times: 4}, 1000 )
                 // TODO animate shake on click
 
               } else if( $(this).html() == '0' ){
@@ -236,7 +234,9 @@ function setBoard(){
                 checkForWin()
               } // else
             } else {// if( !flagToggle ).. the tile IS flagged
-              alert('this tile is protected, toggle the flag selector and select this tile to disable protection')
+              // alert('this tile is protected, toggle the flag selector and select this tile to disable protection')
+              $(this).fadeIn(200).fadeOut(200).fadeIn(200)
+              $('#toggle-flag-btn').fadeIn(200).fadeOut(200).fadeIn(200)
               // TODO animate flashing red on click
             }
           }) // $divTile.click

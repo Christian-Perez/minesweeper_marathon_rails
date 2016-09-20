@@ -135,12 +135,16 @@ function formatTime(num){
     return ( '' + num )
   }
 }
-
-function tick(){
-  --stopwatchSeconds
+function setTime(){
   var minutes = formatTime( Math.floor(stopwatchSeconds / 60) )
   var seconds = formatTime( stopwatchSeconds % 60 )
   $('#current-timer').html(minutes + ':' + seconds)
+  return minutes + ':' + seconds
+}
+
+function tick(){
+  --stopwatchSeconds
+  setTime()
   checkForWin()
 }
 
@@ -176,9 +180,9 @@ function checkForWin(){
     stopwatchLevelUp += stopwatchIncrement
     //TODO disable clicking aditional tiles && make a newGame Btn into Continue Btn >> start timer again at new board
     // resetGame()
-    $('<div>', {id: 'notice', text: 'LEVEL COMPLETE!!!'}).appendTo('#hud')
+    $('<div>', {id: 'notice', text: 'LEVEL COMPLETE!!!', class: 'hidden'}).appendTo('#hud').slideDown( 400 ).delay( 800 ).fadeIn( 800 )
     revealTiles()
-    $('<div>', {class: 'continue-btn', html: 'continue..'}).appendTo('#hud').click( function(){ levelUp() } )
+    $('<div>', {class: 'continue-btn hidden', html: 'continue..'}).appendTo('#hud').slideDown( 400 ).delay( 800 ).fadeIn( 800 ).click( function(){ levelUp() } )
     timer('stop')
   }
   if(stopwatchSeconds < 0){
@@ -187,14 +191,16 @@ function checkForWin(){
 } // checkForWin()
 
 function gameOver(message){
+  timer('stop')
   boardRows = startRows
   boardColumns = startColumns
   stopwatchSeconds = startStopwatchSeconds
   // alert('GAME OVER \n' + message)
-  $('<div>', {id: 'notice', text: 'GAME OVER\n' + message}).appendTo('#hud')
+  $('<div>', {class: 'hidden', id: 'notice', text: 'GAME OVER\n' + message}).appendTo('#hud').slideDown( 400 ).delay( 800 ).fadeIn( 800 )
   revealTiles()
-  $('<div>', {class: 'continue-btn', html: 'start over'}).appendTo('#hud').click( function(){ resetGame() } )
+  $('<div>', {class: 'continue-btn hidden', html: 'start over'}).appendTo('#hud').slideDown( 400 ).delay( 800 ).fadeIn( 1500 ).click( function(){resetGame()} )
 }
+
 function revealTiles(){
   console.log('revealing tiles..')
   $('.tile').addClass('disabled').each(function(){
@@ -233,7 +239,7 @@ function setHUD(){
   $( '<div>', {id: 'hud-display'}).appendTo('#hud')
   $( '<div>', {id: 'hud-buttons'}).appendTo('#hud')
 
-  $('<div>', {class: 'timer', id: 'current-timer', text: formatTime(stopwatchSeconds) }).appendTo('#hud-display')
+  $('<div>', {class: 'timer', id: 'current-timer', text: setTime() }).appendTo('#hud-display')
   $('<div>', {id: 'tile-counter',
     html: '<span id="tilesLeftCounter">' + numOfNonBombs + '</span><span> / </span><span id="flagsLeftCounter">' + numOfBombs + '</span>'
   }).appendTo('#hud-display')
@@ -260,11 +266,8 @@ function setHUD(){
     flagToggle == true ? flagToggle = false : flagToggle = true
     if( $('#toggle-flag-btn').hasClass( 'flagged' ) ){
       $('#toggle-flag-btn').removeClass('flagged')
-      // $('#toggle-flag-btn').css('background-color', 'rgb(90, 180, 210)')
-      //TODO create a class for toggle-flag-btn >> styles should be in css
     } else {
       $('#toggle-flag-btn').addClass('flagged')
-      // $('#toggle-flag-btn').css('background-color', 'rgb(50, 50, 50)')
     }
   }) // click( #toggle-flag-btn )
 }
@@ -273,7 +276,7 @@ function setBoard(){
   $('#scrollDiv').remove()
   $('.continue-btn').remove()
   // scrollDiv
-  $('<div>', { id: 'scrollDiv' }).appendTo('#board');
+  $('<div>', { id: 'scrollDiv', class: 'hidden' }).appendTo('#board');
 
   for(var row = 0; row < boardRows; row++){ // ROW
 

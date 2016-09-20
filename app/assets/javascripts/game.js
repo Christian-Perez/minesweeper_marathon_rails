@@ -165,7 +165,7 @@ function updateScore(){
 
 function checkForWin(){
   if(tilesLeftCounter < 1){
-    alert('you won! yay!!')
+
     $(this).css('background-color', 'green')
     // timer('stop')
     boardColumns++
@@ -175,6 +175,7 @@ function checkForWin(){
     stopwatchSeconds += stopwatchLevelUp
     stopwatchLevelUp += stopwatchIncrement
     //TODO disable clicking aditional tiles && make a newGame Btn into Continue Btn >> start timer again at new board
+    alert('you won! yay!!')
     resetGame()
   }
   if(stopwatchSeconds < 0){
@@ -183,10 +184,10 @@ function checkForWin(){
 } // checkForWin()
 
 function gameOver(){
-  alert('GAME OVER')
   boardRows = startRows
   boardColumns = startColumns
   stopwatchSeconds = startStopwatchSeconds
+  alert('GAME OVER')
   resetGame()
 }
 
@@ -194,6 +195,8 @@ function resetGame(){
   $('#board').empty()
   timer('stop')
   timer('reset')
+  playerScore = startPlayerScore
+  $('player-score').html(startPlayerScore)
   setHUD()
   // check high score
   setBoard()
@@ -232,11 +235,11 @@ function setHUD(){
     flagToggle == true ? flagToggle = false : flagToggle = true
     if( $('#toggle-flag-btn').hasClass( 'flagged' ) ){
       $('#toggle-flag-btn').removeClass('flagged')
-      $('#toggle-flag-btn').css('background-color', 'rgb(90, 180, 210)')
+      // $('#toggle-flag-btn').css('background-color', 'rgb(90, 180, 210)')
       //TODO create a class for toggle-flag-btn >> styles should be in css
     } else {
       $('#toggle-flag-btn').addClass('flagged')
-      $('#toggle-flag-btn').css('background-color', 'rgb(50, 50, 50)')
+      // $('#toggle-flag-btn').css('background-color', 'rgb(50, 50, 50)')
     }
   }) // click( #toggle-flag-btn )
 }
@@ -246,52 +249,53 @@ function setBoard(){
   $('<div>', { id: 'scrollDiv' }).appendTo('#board');
 
   for(var row = 0; row < boardRows; row++){ // ROW
+
     $('<div>', { id: ('row' + row), class: 'row' }).appendTo('#scrollDiv');
-    for(var col = 0; col < boardColumns; col++){ // COLUMN
-      var $divTile = $('<div>', { class: 'tile tile-hidden', id: makeTileIdStr(row, col), text: 0 } );
-        /// FOR EVERY TILE ON THE BOARD...
-        $divTile.click(function(){
-          /// toggle Flags
-          if(flagToggle){
-            if( $(this).hasClass('flagged') ){
-              $(this).removeClass('flagged')
-              flagsLeftCounter++
-            } else {
-              $(this).addClass('flagged')
-              flagsLeftCounter--
+      for(var col = 0; col < boardColumns; col++){ // COLUMN
+        var $divTile = $('<div>', { class: 'tile tile-hidden', id: makeTileIdStr(row, col), text: 0 } );
+          /// FOR EVERY TILE ON THE BOARD...
+          $divTile.click(function(){
+            /// toggle Flags
+            if(flagToggle){
+              if( $(this).hasClass('flagged') ){
+                $(this).removeClass('flagged')
+                flagsLeftCounter++
+              } else {
+                $(this).addClass('flagged')
+                flagsLeftCounter--
+              }
+              // update counter
+              $('#flagsLeftCounter').html(flagsLeftCounter)
+            } else if( !$(this).hasClass('flagged') ){
+              // is bomb
+              if( $(this).html() == '-1' ){
+                $(this).addClass('tile-bomb')
+                $(this).removeClass('tile-hidden')
+                timer('stop')
+                //TODO style board
+                alert( 'tile ' + $(this).attr('id') + ' is a bomb, you lose')
+                stopwatchSeconds = 0
+
+              } else if($(this).hasClass('clicked') ){
+                alert('This tile has already been selected, select another.')
+                // TODO animate shake on click
+
+              } else if( $(this).html() == '0' ){
+                clearZeroTiles( $(this).attr('id') )
+                checkForWin()
+
+              } else { // is num between 1 & 8
+                // console.log($(this).attr('id'))
+                triggerTileById( $(this).attr('id') )
+                checkForWin()
+              } // else
+            } else {// if( !flagToggle ).. the tile IS flagged
+              alert('this tile is protected, toggle the flag selector and select this tile to disable protection')
+              // TODO animate flashing red on click
             }
-            // update counter
-            $('#flagsLeftCounter').html(flagsLeftCounter)
-          } else if( !$(this).hasClass('flagged') ){
-            // is bomb
-            if( $(this).html() == '-1' ){
-              $(this).addClass('tile-bomb')
-              $(this).removeClass('tile-hidden')
-              timer('stop')
-              alert( 'tile ' + $(this).attr('id') + ' is a bomb, you lose')
-              //TODO style board
-              stopwatchSeconds = 0
-
-            } else if($(this).hasClass('clicked') ){
-              alert('This tile has already been selected, select another.')
-              // TODO animate shake on click
-
-            } else if( $(this).html() == '0' ){
-              clearZeroTiles( $(this).attr('id') )
-              checkForWin()
-
-            } else { // is num between 1 & 8
-              // console.log($(this).attr('id'))
-              triggerTileById( $(this).attr('id') )
-              checkForWin()
-            } // else
-          } else {// if( !flagToggle ).. the tile IS flagged
-            alert('this tile is protected, toggle the flag selector and select this tile to disable protection')
-            // TODO animate flashing red on click
-          }
-        }) // $divTile.click
-        $divTile.appendTo('#row' + row);
-    } // forEach( column )
+          }) // $divTile.click
+          $divTile.appendTo('#row' + row);
+      } // forEach( column )
   } // forEach( row )
   $('.row').css('width', (60 * boardColumns) )
 
@@ -308,7 +312,8 @@ function setBoard(){
   for(var b = 0; b < arrayOfBombs.length; b++){
     makeIntoBomb(arrayOfBombs[b])
   }
+  $('#scrollDiv').css('display', 'none')
+  $('#scrollDiv').fadeIn('slow')
   tilesToClear = numOfNonBombs
-
   timer('start')
 } // setBoard()

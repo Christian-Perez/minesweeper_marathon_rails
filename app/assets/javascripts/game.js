@@ -1,118 +1,62 @@
+
+    // BOARD
 var board = document.getElementById('board'),
-    boardRows = 3,
-    boardColumns = 3,
     startRows = 3,
+    boardRows = startRows,
+
     startColumns = 3,
-    startStopwatchSeconds = 60,
-    startStopwatchLevelUp = 10,
-    startPlayerScore = 0,
+    boardColumns = startColumns,
+
+    // BOMBS
     startNumOfBombs = 1,
-    startNumOfNonBombs = (boardRows * boardColumns) - numOfBombs,
-    // game vars
-    stopwatchSeconds = startStopwatchSeconds,
-    stopwatchLevelUp = 10,  // adds time to stopwatchSeconds
-    stopwatchIncrement = 10, // increases stopwatchLevelUp
-    playerScore = startPlayerScore,
     numOfBombs = startNumOfBombs,
+    startNumOfNonBombs = (boardRows * boardColumns) - numOfBombs,
     bombIncrement = 2,
     numOfNonBombs = startNumOfNonBombs,
-    tilesLeftCounter, // used by setBoard() & clearZeroTiles()
 
+    // STOPWATCH
     stopwatch,
+    startStopwatchSeconds = 60,
+    stopwatchSeconds = startStopwatchSeconds,
+    startStopwatchLevelUp = 10,
+    stopwatchLevelUp = 10,  // adds time to stopwatchSeconds
+    stopwatchIncrement = 10, // increases stopwatchLevelUp
+
+    // SCORE
+    startPlayerScore = 0,
+    playerScore = startPlayerScore,
+
+    // COUNTERS ( flags / tiles )
+    tilesLeftCounter, // used by setBoard() & clearZeroTiles()
     flagsLeftCounter = numOfBombs,
     flagToggle = false
 
 $('#startGameButton').click( function(){ resetGame() } )
-
-function randomTileAxisNum(axis){
-  // axis = 'col' or 'row'
-  var num
-  axis == 'col' ? num = Math.floor( (Math.random() *boardColumns ) ) : num = Math.floor( (Math.random() *boardRows ) )
-  return num
-}//randomNum()
-
-function makeTileIdStr(row, col){ // max board size 100x
-  function makeAxisStr(num){
-
-    if(num < 10){
-      return ( '0' + num )
-    }else{
-      return ( '' + num )
-    }
-  } // makeAxisStr(num)
-  return makeAxisStr(row) + makeAxisStr(col)
-} // makeTileIdStr(row, col)
-
-function traverseTiles(tileIdStr, directionStr){
-  // define path directions
-  setTimeout(function(){}, 3000)
-  var shift = {
-    up: [-1, 0],
-    down: [1, 0],
-    left: [0, -1],
-    right: [0, 1],
-    // not tested ..
-    ul: [-1, -1],
-    ur: [-1, 1],
-    dl: [1, -1],
-    dr: [1, 1]
-  }
-
-  // start at titleIdStr
-  var targetRowNum = parseInt(tileIdStr.slice(0, 2))
-  var targetColNum = parseInt(tileIdStr.slice(2))
-
-  //shift tile focus
-  targetRowNum += shift[directionStr][0]
-  targetColNum += shift[directionStr][1]
-
-  return makeTileIdStr(targetRowNum, targetColNum)
-} // traverseTile(tileIdStr, directionStr)
-
-function isBomb(tileDOM){
-  if( tileDOM.html() == -1 ){
-    return true
-  } else {
-    return false
-  }
-}
 
 function triggerTileById(tileIdStr){
  if( !$('#' + tileIdStr).hasClass('clicked')){
   $('#' + tileIdStr).addClass('clicked')
   $('#' + tileIdStr).removeClass('tile-hidden')
   $('#' + tileIdStr).addClass('tile-' + parseInt($('#' + tileIdStr).html()) )
+
+  // update tile counter
   --tilesLeftCounter
   $('#tilesLeftCounter').text(tilesLeftCounter)
 
+  // update score
   playerScore += parseInt( $('#' + tileIdStr).html() )
-  updateScore()
+  $('#player-score').html(playerScore + 'pts')
   }
 } // triggerTileById
 
-function clearZeroTiles(zeroTileIdStr){
-  /// clears all adjacent tiles that are 'zeroTiles' including tiles touching diagonally
-  var path = ['up', 'ur', 'right', 'dr', 'down', 'dl', 'left', 'ul']
-  var zeroTilesArr = [zeroTileIdStr]
-  // for every zero tile that is found..
-  for(var t = 0; t < zeroTilesArr.length; t++){
-    triggerTileById(zeroTilesArr[t])
-    // look at all adjacent tiles
-    for (var d = 0; d < path.length; d++){
-      var targetTileId = traverseTiles(zeroTilesArr[t], path[d])
-      var $targetTile = $('#' + targetTileId)
-      if( $targetTile.html() == '0' && !$targetTile.hasClass('clicked')){
-        triggerTileById(targetTileId)
-        zeroTilesArr.push(targetTileId)
-      }
-      if( parseInt( $targetTile.html() ) > 0 && !$targetTile.hasClass('clicked')){
-        triggerTileById(targetTileId)
-      }
-    } // for(path.length)
-  } // for zeroTilesAr.length
-} // clearZeroTiles(zeroTileIdStr)
-
 function timer(string){
+
+  function tick(){
+    --stopwatchSeconds
+    setTime()
+    checkForWin()
+  }
+
   switch(string){
     case 'start':
       stopwatch = setInterval(function(){ tick() }, 1000);
@@ -128,48 +72,23 @@ function timer(string){
   } // switch
 } // timer(string)
 
-function formatTime(num){
-  if(num < 10){
-    return ( '0' + num )
-  }else{
-    return ( '' + num )
-  }
-}
 function setTime(){
+
+  function formatTime(num){
+    if(num < 10){
+      return ( '0' + num )
+    }else{
+      return ( '' + num )
+    }
+  }
+
   var minutes = formatTime( Math.floor(stopwatchSeconds / 60) )
   var seconds = formatTime( stopwatchSeconds % 60 )
   $('#current-timer').html(minutes + ':' + seconds)
   return minutes + ':' + seconds
 }
 
-function tick(){
-  --stopwatchSeconds
-  setTime()
-  checkForWin()
-}
-
-function makeIntoBomb(tileIdStr){
-  /// function concerns self with ONE bomb && recognizes & ignores adjacent bombs
-  //make tile at index tileIdStr into bomb
-  $('#' + tileIdStr).html('-1')
-  // define path to check tiles around bomb
-  var path = ['up', 'ur', 'right', 'dr', 'down', 'dl', 'left', 'ul']
-  // start of path = @bomb
-  var $targetTile = $('#' + tileIdStr)
-  for(var d = 0; d < path.length; d++){ // 'd' for direction
-    targetTileIdStr = traverseTiles(tileIdStr, path[d])
-    $targetTile = $('#' + targetTileIdStr)
-    if( !isBomb($targetTile) ){
-      $targetTile.html(parseInt($targetTile.html()) + 1)
-    }
-  } // for( pathThroughTargets )
-} // MAKE INTO BOMB ()
-
-function updateScore(){
-  $('#player-score').html(playerScore + 'pts')
-}
-
-function checkForWin(){
+function checkForWin(){ //
   if(tilesLeftCounter < 1){
     // timer('stop')
     boardColumns++
@@ -185,12 +104,12 @@ function checkForWin(){
     $('<div>', {class: 'continue-btn hidden', html: 'continue..'}).appendTo('#hud').slideDown( 400 ).delay( 800 ).fadeIn( 800 ).click( function(){ levelUp() } )
     timer('stop')
   }
-  if(stopwatchSeconds < 0){
+  if(stopwatchSeconds < 1){
     gameOver('time ran out :(')
   }
 } // checkForWin()
 
-function gameOver(message){
+function gameOver(message){ //
   timer('stop')
   boardRows = startRows
   boardColumns = startColumns
@@ -208,7 +127,7 @@ function revealTiles(){
       $(this).addClass('tile-bomb')
     }
   })
-}
+} //
 
 function resetGame(){
   console.log('resetGame')
@@ -221,12 +140,10 @@ function resetGame(){
   numOfBombs = startNumOfBombs
   numOfNonBombs = startNumOfNonBombs
   setHUD()
-  // // check high score
   setBoard()
 }
 
 function levelUp(){
-  console.log('level up')
   $('#board').empty()
   timer('stop')
   setHUD()
@@ -278,12 +195,12 @@ function setBoard(){
   // scrollDiv
   $('<div>', { id: 'scrollDiv', class: 'hidden' }).appendTo('#board');
 
+  // make tiles & add listener( function() )
   for(var row = 0; row < boardRows; row++){ // ROW
-
     $('<div>', { id: ('row' + row), class: 'row' }).appendTo('#scrollDiv');
       for(var col = 0; col < boardColumns; col++){ // COLUMN
         var $divTile = $('<div>', { class: 'tile tile-hidden', id: makeTileIdStr(row, col), text: 0 } );
-          /// FOR EVERY TILE ON THE BOARD...
+          // userTriggersTile.then(...)
           $divTile.click(function(){
             /// toggle Flags
             if(flagToggle){
@@ -326,6 +243,7 @@ function setBoard(){
           $divTile.appendTo('#row' + row)
       } // forEach( column )
   } // forEach( row )
+
   $('.row').css('width', (60 * boardColumns) )
 
   /// MAKE ARRAY OF UNIQUE BOMB IDs
@@ -337,12 +255,106 @@ function setBoard(){
       arrayOfBombs.push(newBombId)
     }
   } // while(arrayOfBombs.length < numOfBombs)
+
   /// MAKE BOMBS
   for(var b = 0; b < arrayOfBombs.length; b++){
     makeIntoBomb(arrayOfBombs[b])
   }
-  $('#scrollDiv').css('display', 'none')
-  $('#scrollDiv').fadeIn('slow')
+
   tilesToClear = numOfNonBombs
+  $('#scrollDiv').css('display', 'none').fadeIn('slow')
   timer('start')
+
+  function randomTileAxisNum(axis){
+    // axis = 'col' or 'row'
+    var num
+    axis == 'col' ? num = Math.floor( (Math.random() *boardColumns ) ) : num = Math.floor( (Math.random() *boardRows ) )
+    return num
+  }//randomTileAxisNum()
+
+  function makeTileIdStr(row, col){ // max board size 100x
+    function makeAxisStr(num){
+
+      if(num < 10){
+        return ( '0' + num )
+      }else{
+        return ( '' + num )
+      }
+    } // makeAxisStr(num)
+    return makeAxisStr(row) + makeAxisStr(col)
+  } // makeTileIdStr(row, col)
+
+  function traverseTiles(tileIdStr, directionStr){
+    // define path directions
+    setTimeout(function(){}, 3000)
+    var shift = {
+      up: [-1, 0],
+      down: [1, 0],
+      left: [0, -1],
+      right: [0, 1],
+      // not tested ..
+      ul: [-1, -1],
+      ur: [-1, 1],
+      dl: [1, -1],
+      dr: [1, 1]
+    }
+
+    // start at titleIdStr
+    var targetRowNum = parseInt(tileIdStr.slice(0, 2))
+    var targetColNum = parseInt(tileIdStr.slice(2))
+
+    //shift tile focus
+    targetRowNum += shift[directionStr][0]
+    targetColNum += shift[directionStr][1]
+
+    return makeTileIdStr(targetRowNum, targetColNum)
+  } // traverseTile(tileIdStr, directionStr)
+
+  function makeIntoBomb(tileIdStr){
+    /// function concerns self with ONE bomb && recognizes & ignores adjacent bombs
+    //make tile at index tileIdStr into bomb
+    $('#' + tileIdStr).html('-1')
+    // define path to check tiles around bomb
+    var path = ['up', 'ur', 'right', 'dr', 'down', 'dl', 'left', 'ul']
+    // start of path = @bomb
+    var $targetTile = $('#' + tileIdStr)
+    for(var d = 0; d < path.length; d++){ // 'd' for direction
+      targetTileIdStr = traverseTiles(tileIdStr, path[d])
+      $targetTile = $('#' + targetTileIdStr)
+      if( !isBomb($targetTile) ){
+        $targetTile.html(parseInt($targetTile.html()) + 1)
+      }
+    } // for( pathThroughTargets )
+
+    function isBomb(tileDOM){
+      if( tileDOM.html() == -1 ){
+        return true
+      } else {
+        return false
+      }
+    }
+
+  } // MAKE INTO BOMB ()
+
+  function clearZeroTiles(zeroTileIdStr){
+    /// clears all adjacent tiles that are 'zeroTiles' including tiles touching diagonally
+    var path = ['up', 'ur', 'right', 'dr', 'down', 'dl', 'left', 'ul']
+    var zeroTilesArr = [zeroTileIdStr]
+    // for every zero tile that is found..
+    for(var t = 0; t < zeroTilesArr.length; t++){
+      triggerTileById(zeroTilesArr[t])
+      // look at all adjacent tiles
+      for (var d = 0; d < path.length; d++){
+        var targetTileId = traverseTiles(zeroTilesArr[t], path[d])
+        var $targetTile = $('#' + targetTileId)
+        if( $targetTile.html() == '0' && !$targetTile.hasClass('clicked')){
+          triggerTileById(targetTileId)
+          zeroTilesArr.push(targetTileId)
+        }
+        if( parseInt( $targetTile.html() ) > 0 && !$targetTile.hasClass('clicked')){
+          triggerTileById(targetTileId)
+        }
+      } // for(path.length)
+    } // for zeroTilesAr.length
+  } // clearZeroTiles(zeroTileIdStr)
 } // setBoard()

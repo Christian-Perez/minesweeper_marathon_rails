@@ -3,7 +3,7 @@ var board = document.getElementById('board'),
     boardColumns = 3,
     startRows = 3,
     startColumns = 3,
-    startStopwatchSeconds = 30,
+    startStopwatchSeconds = 60,
     startStopwatchLevelUp = 10,
     startPlayerScore = 0,
     startNumOfBombs = 1,
@@ -167,9 +167,7 @@ function updateScore(){
 
 function checkForWin(){
   if(tilesLeftCounter < 1){
-    $(this).css('background-color', 'green')
     // timer('stop')
-
     boardColumns++
     boardRows++
     numOfBombs += bombIncrement
@@ -178,21 +176,21 @@ function checkForWin(){
     stopwatchLevelUp += stopwatchIncrement
     //TODO disable clicking aditional tiles && make a newGame Btn into Continue Btn >> start timer again at new board
     // resetGame()
-    $('<div>', {class: 'continue-btn', html: 'continue..'}).appendTo('#board').click( function(){ levelUp() } )
+    $('<div>', {class: 'continue-btn', html: 'continue..'}).appendTo('#hud').click( function(){ levelUp() } )
     timer('stop')
     alert('you won! yay!!')
   }
   if(stopwatchSeconds < 0){
-    gameOver()
+    gameOver('time ran out :(')
   }
 } // checkForWin()
 
-function gameOver(){
+function gameOver(message){
   boardRows = startRows
   boardColumns = startColumns
   stopwatchSeconds = startStopwatchSeconds
-  alert('GAME OVER')
-  resetGame()
+  alert('GAME OVER \n' + message)
+  $('<div>', {class: 'continue-btn', html: 'start over'}).appendTo('#hud').click( function(){ levelUp() } )
 }
 
 function resetGame(){
@@ -291,9 +289,8 @@ function setBoard(){
                 $(this).removeClass('tile-hidden')
                 timer('stop')
                 //TODO style board
-                alert( 'tile ' + $(this).attr('id') + ' is a bomb, you lose')
                 stopwatchSeconds = 0
-
+                gameOver('you clicked a bomb :(')
               } else if($(this).hasClass('clicked') ){
                 alert('This tile has already been selected, select another.')
                 // TODO animate shake on click

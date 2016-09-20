@@ -26,6 +26,14 @@ body {
 
   height: 98vh;
 }
+
+li, h3 {
+  text-align: left;
+};
+
+#objectives {
+  padding: 0 10% 0 10%;
+}
 #gameWindow {
   width: 100%;
 
@@ -39,10 +47,10 @@ body {
   box-shadow: 2px 2px 8px 2px $shadow;
 }
 // accent shadows
-.tile, #toggle-flag-btn, #reset-btn, #tile-counter{
-  -webkit-box-shadow: 2px 2px 8px 2px $shadow-light;
-  -moz-box-shadow: 2px 2px 8px 2px $shadow-light;
-  box-shadow: 2px 2px 8px 2px $shadow-light;
+.tile, .timer, #toggle-flag-btn, #reset-btn {
+  -webkit-box-shadow: 1px 1px 8px 1px $shadow-light;
+  -moz-box-shadow: 1px 1px 8px 1px $shadow-light;
+  box-shadow: 1px 1px 8px 1px $shadow-light;
 }
 #scrollDiv{
     display: inline-block;
@@ -54,7 +62,7 @@ body {
 }
 #hud {
   display: block;
-  overflow: scroll;
+  // overflow: scroll;
   margin-bottom: 10px;
   #hud-Display{
 
@@ -78,7 +86,6 @@ body {
 #tile-counter {
   width: 118px;
   font-size: 30px;
-  background-color: $color1;
 }
 #toggle-flag-btn,
 #reset-btn {
@@ -162,10 +169,7 @@ body {
   cursor:no-drop;
 }
 .tile:hover {
-  background-color: $color1-hover;
-  &.flagged{
-    background-color: $flagged-hover;
-  }
+  opacity: .8;
 }
 /*order is important, before tileHidden & other tile properties*/
 .tile-hidden {

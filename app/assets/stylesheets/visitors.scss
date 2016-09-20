@@ -130,7 +130,7 @@ body {
   width: $tile-dimension;
   height: $tile-dimension;
 
-  // border: 1px solid #fff;
+  cursor: default;
 
   background-color: $color1;
   text-align: center;
@@ -149,6 +149,15 @@ body {
     font-size: 30px;
   }
 }
+.continue-btn {
+  color: $color1;
+  display: block;
+  background-color: $color2;
+  border: 1px solid $color1;
+  &:hover{
+    background-color: $color2-hover;
+  }
+}
 .clicked {
   cursor:no-drop;
 }
@@ -161,8 +170,7 @@ body {
 /*order is important, before tileHidden & other tile properties*/
 .tile-hidden {
   color: transparent;
-  cursor: default;
-  // color: #000000;
+  // color: #000;
 }
 .tile-bomb {
   color: transparent;

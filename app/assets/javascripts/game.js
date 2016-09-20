@@ -3,17 +3,19 @@ var board = document.getElementById('board'),
     boardColumns = 3,
     startRows = 3,
     startColumns = 3,
-    startStopwatchSeconds = 1000,
+    startStopwatchSeconds = 30,
     startStopwatchLevelUp = 10,
     startPlayerScore = 0,
+    startNumOfBombs = 1,
+    startNumOfNonBombs = (boardRows * boardColumns) - numOfBombs,
     // game vars
     stopwatchSeconds = startStopwatchSeconds,
     stopwatchLevelUp = 10,  // adds time to stopwatchSeconds
     stopwatchIncrement = 10, // increases stopwatchLevelUp
     playerScore = startPlayerScore,
-    numOfBombs = 1,
+    numOfBombs = startNumOfBombs,
     bombIncrement = 2,
-    numOfNonBombs = (boardRows * boardColumns) - numOfBombs,
+    numOfNonBombs = startNumOfNonBombs,
     tilesLeftCounter, // used by setBoard() & clearZeroTiles()
 
     stopwatch,
@@ -165,9 +167,9 @@ function updateScore(){
 
 function checkForWin(){
   if(tilesLeftCounter < 1){
-
     $(this).css('background-color', 'green')
     // timer('stop')
+
     boardColumns++
     boardRows++
     numOfBombs += bombIncrement
@@ -175,8 +177,10 @@ function checkForWin(){
     stopwatchSeconds += stopwatchLevelUp
     stopwatchLevelUp += stopwatchIncrement
     //TODO disable clicking aditional tiles && make a newGame Btn into Continue Btn >> start timer again at new board
+    // resetGame()
+    $('<div>', {class: 'continue-btn', html: 'continue..'}).appendTo('#board').click( function(){ levelUp() } )
+    timer('stop')
     alert('you won! yay!!')
-    resetGame()
   }
   if(stopwatchSeconds < 0){
     gameOver()
@@ -192,13 +196,25 @@ function gameOver(){
 }
 
 function resetGame(){
+  console.log('resetGame')
   $('#board').empty()
   timer('stop')
   timer('reset')
   playerScore = startPlayerScore
-  $('player-score').html(startPlayerScore)
+  boardColumns = startColumns
+  boardRows = startRows
+  numOfBombs = startNumOfBombs
+  numOfNonBombs = startNumOfNonBombs
   setHUD()
-  // check high score
+  // // check high score
+  setBoard()
+}
+
+function levelUp(){
+  console.log('level up')
+  $('#board').empty()
+  timer('stop')
+  setHUD()
   setBoard()
 }
 
@@ -245,6 +261,8 @@ function setHUD(){
 }
 
 function setBoard(){
+  $('#scrollDiv').remove()
+  $('.continue-btn').remove()
   // scrollDiv
   $('<div>', { id: 'scrollDiv' }).appendTo('#board');
 
@@ -294,7 +312,7 @@ function setBoard(){
               // TODO animate flashing red on click
             }
           }) // $divTile.click
-          $divTile.appendTo('#row' + row);
+          $divTile.appendTo('#row' + row)
       } // forEach( column )
   } // forEach( row )
   $('.row').css('width', (60 * boardColumns) )
